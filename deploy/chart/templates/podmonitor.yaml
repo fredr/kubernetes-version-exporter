@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    {{- .Values.labels | toYaml | nindent 4 }}
+  name: kubernetes-version-exporter
+spec:
+  revisionHistoryLimit: 3
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- .Values.labels | toYaml | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- .Values.labels | toYaml | nindent 8 }}
+    spec:
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+      containers:
+      - name: kubernetes-version-exporter
+        image: ghcr.io/fredr/kubernetes-version-exporter
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+        resources:
+          {{- .Values.resources | toYaml | nindent 10 }}
