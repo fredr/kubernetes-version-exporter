@@ -3,6 +3,6 @@ WORKDIR /app
 COPY . /app
 RUN cargo build --release
 
-FROM gcr.io/distroless/static:nonroot
-COPY --from=build --chown=nonroot:nonroot /app/target/release/kubernetes-version-exporter .
-ENTRYPOINT ["./kubernetes-version-exporter"]
+FROM gcr.io/distroless/cc:nonroot
+COPY --from=build --chown=nonroot:nonroot /app/target/release/kubernetes-version-exporter /
+ENTRYPOINT ["/kubernetes-version-exporter"]
