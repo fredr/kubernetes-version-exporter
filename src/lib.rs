@@ -54,8 +54,7 @@ impl Collector for ExportMetrics {
 
     fn collect(&self) -> Vec<prometheus::proto::MetricFamily> {
         let info = thread::spawn(|| {
-            let rt = tokio::runtime::Runtime::new().unwrap();
-            rt.block_on(async {
+            actix_rt::System::new().block_on(async {
                 let client = Client::try_default().await.unwrap();
                 client.apiserver_version().await.unwrap()
             })
