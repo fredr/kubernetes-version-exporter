@@ -7,6 +7,12 @@ pub struct ExportMetrics {
     kubernetes_version: prometheus::GaugeVec,
 }
 
+impl Default for ExportMetrics {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ExportMetrics {
     pub fn namespace() -> String {
         env!("CARGO_PKG_NAME").replace("-", "_")
